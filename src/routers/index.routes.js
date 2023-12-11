@@ -3,15 +3,10 @@
 const {Router} = require('express')
 
 const router = Router()
+const {renderIndex,renderAbout} = require('../controllers/index.controllers.js')
 
-router.get('/',(req,res)=>{
-    res.render('index')
-})
-
-router.get('/login',(req,res)=>{
-    res.render('login')
-})
-
+router.get('/',renderIndex)
+router.get('/login',renderAbout)
 
 //importae la variable router
 module.exports = router

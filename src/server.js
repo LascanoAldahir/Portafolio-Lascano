@@ -1,5 +1,6 @@
 const express = require('express')
 const path = require('path');
+const methodOverride = require('method-override');
 
 //Importar handlebars
 const { engine }  = require('express-handlebars')
@@ -59,9 +60,17 @@ app.set('view engine','.hbs')
 app.get('/',(req,res)=>{
     res.render('index')
 })
+// Rutas 
+app.use(require('./routers/index.routes'))
 
 // Archivos estáticos
 app.use(express.static(path.join(__dirname,'public')))
 
 // Rutas 
 app.use(require('./routers/index.routes'))
+app.use(require('./routers/portafolio.routes'))
+
+
+// Middlewares 
+
+app.use(methodOverride('_method'))

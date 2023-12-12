@@ -1,9 +1,14 @@
 const express = require('express')
 const path = require('path');
-const methodOverride = require('method-override');
+
 
 //Importar handlebars
 const { engine }  = require('express-handlebars')
+
+
+//importar el methodOvverride
+const methodOverride = require('method-override')
+
 // Inicializaciones
 const app = express()
 
@@ -40,10 +45,7 @@ res.render("index")
 // Archivos estáticos
 app.use(express.static(path.join(__dirname,'public')))
 
-
 module.exports = app
-
-
 
 // Configuraciones 
 
@@ -74,3 +76,4 @@ app.use(require('./routers/portafolio.routes'))
 // Middlewares 
 
 app.use(methodOverride('_method'))
+

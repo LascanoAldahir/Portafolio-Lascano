@@ -16,23 +16,31 @@ const createNewPortafolio =async (req,res)=>{
     const {title, category,description} = req.body
     const newPortfolio = new Portfolio({title,category,description})
     await newPortfolio.save()
-    res.json({newPortfolio})
+    res.redirect('/portafolios')
+}
+//metodo de actualizar el foprmulario
+const renderEditPortafolioForm =async(req,res)=>{
+//consulta del ´portafolio en bdd al id
+    const portfolio = await Portfolio.findById(req.params.id).lean()
+    //mandar a la vista
+    res.render('portafolio/editPortfolio',{portfolio})
 }
 
-const renderEditPortafolioForm = (req,res)=>{
-    res.send('Formulario para editar un portafolio')
+//metodo actualizar en la bdd lo capturado en el form
+const updatePortafolio = async(req,res)=>{
+    //capturar los datos del body
+    const {title,category,description}= req.body
+    //actualizar el portafolio en bdd
+    await Portfolio.findByIdAndUpdate(req.params.id,{title,category,description})
+    res.redirect('/portafolios')
 }
-const updatePortafolio = (req,res)=>{
-    res.send('Editar un portafolio')
+
+//metodo para eliminar el portafolio
+const deletePortafolio = async(req,res)=>{
+    //capturtar el id del portafolio
+    await Portfolio.findByIdAndDelete(req.params.id)
+    res.redirect('/portafolios')
 }
-const deletePortafolio = (req,res)=>{
-    res.send('Eliminar un nuevo portafolio')
-}
-
-
-
-
-
 
 module.exports ={
     renderAllPortafolios,

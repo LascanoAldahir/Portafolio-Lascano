@@ -1,6 +1,12 @@
 const express = require('express')
 const path = require('path');
 
+//importacion de passport
+const passport = require('passport');
+//importacion de express-sesion
+const session = require('express-session');
+
+
 
 //Importar handlebars
 const { engine }  = require('express-handlebars')
@@ -10,6 +16,9 @@ const { engine }  = require('express-handlebars')
 const methodOverride = require('method-override')
 
 // Inicializaciones
+require('./config/passport')
+//instanciar express
+
 const app = express()
 
 // Configuraciones
@@ -33,8 +42,23 @@ app.set('view engine','.hbs')
 
 // Middlewares
 app.use(express.urlencoded({extended:false}))
+app.use(methodOverride(`method`))
+//configurar la sesion del usuario
+app.use(session({ 
+    secret: 'secret',
+    resave:true,
+    saveUninitialized:true
+}));
+app.use(passport.initialize())
+app.use(passport.session())
 
-// Variables globales
+//variables globales
+//crear una variable global
+app.use((req,res,next)=>{
+    res.locals.user = req.user?.name || null
+    next()
+})
+
 
 // Rutas
 //primera ruta
@@ -71,9 +95,18 @@ app.use(express.static(path.join(__dirname,'public')))
 // Rutas 
 app.use(require('./routers/index.routes'))
 app.use(require('./routers/portafolio.routes'))
-
+app.use(require('./routers/user.routes'))
 
 // Middlewares 
 
 app.use(methodOverride('_method'))
+
+app.use(session({ 
+    secret: 'secret',
+    resave:true,
+    saveUninitialized:true
+}));
+app.use(passport.initialize())
+app.use(passport.session())
+
 

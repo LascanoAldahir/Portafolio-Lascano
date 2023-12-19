@@ -6,6 +6,7 @@ const passport = require('passport');
 //importacion de express-sesion
 const session = require('express-session');
 
+const fileUpload = require('express-fileupload')
 
 
 //Importar handlebars
@@ -17,6 +18,8 @@ const methodOverride = require('method-override')
 
 // Inicializaciones
 require('./config/passport')
+
+
 //instanciar express
 
 const app = express()
@@ -81,6 +84,11 @@ app.engine('.hbs',engine({
     extname:'.hbs'
 }))
 app.set('view engine','.hbs')
+
+app.use(fileUpload({
+    useTempFiles : true,
+    tempFileDir : './uploads'
+}));
 
 // Rutas 
 app.get('/',(req,res)=>{

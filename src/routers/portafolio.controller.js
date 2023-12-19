@@ -1,7 +1,7 @@
 //metodo para listar los portafolios
 const renderAllPortafolios = async(req,res)=>{
     //listar todos los portafolios y transformar en objetos
-    const portfolios = await Portfolio.find().lean()
+    const portfolios = await Portfolio.find({user:req.user._id}).lean()
     //mandar a la vista los portafolios
     res.render("portafolio/allPortfolios",{portfolios})
 }
@@ -13,6 +13,7 @@ const renderPortafolio = (req,res)=>{
 
 //metodo para mostrar el formulario
 const renderPortafolioForm = (req,res)=>{
+    
     res.render('portafolio/newFormPortafolio')
 }
 //metodo para guardar una base de datos lo capturado en el form
@@ -21,6 +22,9 @@ const createNewPortafolio =async (req,res)=>{
     const {title, category,description} = req.body
     //crear una nueva istancia
     const newPortfolio = new Portfolio({title,category,description})
+
+    newPortfolio.user = req.user._id
+
     //guardar en la BDD
     await newPortfolio.save()
     //mostrar el resultado
@@ -33,8 +37,12 @@ const renderEditPortafolioForm = (req,res)=>{
     res.send('Formulario para editar un portafolio')
 }
 //metodo para guardar en la base de datos
-const updatePortafolio = (req,res)=>{
-    res.send('Editar un portafolio')
+const updatePortafolio = async(req,res)=>{
+    const portfolio = await Portfolio.findById(req.params.id).lean()
+    if(!(portfolio.user.toString() !== req.user._id.toString())) return res.redirect('/portafolios')
+    const {title,category,description}= req.body
+    await Portfolio.findByIdAndUpdate(req.params.id,{title,category,description})
+    res.redirect('/portafolios')
 }
 
 //metodo para eliminar en la base de datos

@@ -12,7 +12,7 @@ module.exports.isAuthenticated = (req,res,next)=>{
     
 }
    //redireccionar a la vista portafolios si el usuario inicio sesion
-module.exports.redirectIfAuthenticated = (req, res, next)=>{
+   module.exports.redirectIfAuthenticated = (req, res, next)=>{
     if (req.isAuthenticated()) {
         return res.redirect('/portafolios');
     }

@@ -2,12 +2,12 @@
 const User = require('../models/User')
 //importar el modelo
 const passport = require("passport")
-
-
 //mostrar el formulario de registro
 const renderRegisterForm =(req,res)=>{
     res.render('user/registerForm')
 }
+
+
 //capturar los datos del formulario y almacenar en BDD
 const registerNewUser =async(req,res)=>{
     //capturar los datos del body

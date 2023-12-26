@@ -1,10 +1,8 @@
 const Portfolio = require('../models/Portfolio')
-
 const { uploadImage } = require('../config/cloudinary')
 
-
 const renderAllPortafolios = async(req,res)=>{
-    const portfolios = await Portfolio.find().lean()
+    const portfolios = await Portfolio.find({user:req.user._id}).lean()
     res.render("portafolio/allPortfolios",{portfolios})
 }
 
@@ -20,8 +18,13 @@ const createNewPortafolio =async (req,res)=>{
     const newPortfolio = new Portfolio({title,category,description})
     newPortfolio.user = req.user._id
     if(!(req.files?.image)) return res.send("Se requiere una imagen")
-    await uploadImage(req.files.image.tempFilePath)
-    await newPortfolio.save()
+    try{
+        await uploadImage(req.files.image.tempFilePath)
+        await newPortfolio.save()
+    }catch(e){
+    console.log(e)
+    }
+
     res.redirect('/portafolios')
 }
 
@@ -42,10 +45,11 @@ const updatePortafolio = async(req,res)=>{
     res.redirect('/portafolios')
 }
 
+
 //metodo para eliminar el portafolio
 const deletePortafolio = async(req,res)=>{
     //capturtar el id del portafolio
-    await Portfolio.findByIdAndDelete(req.params.id)
+    await Portfolio.findByIdAndDelete(req.params.id) //posiblemente borrar las dos lineas
     res.redirect('/portafolios')
 }
 

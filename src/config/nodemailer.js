@@ -10,7 +10,6 @@ const transporter = nodemailer.createTransport({
     }
 })
 
-
 // send mail with defined transport object
 module.exports.sendMailToUser = async(userMail,token)=>{
     console.log(token);

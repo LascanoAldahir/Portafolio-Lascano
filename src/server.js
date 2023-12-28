@@ -8,10 +8,8 @@ const session = require('express-session');
 
 const fileUpload = require('express-fileupload')
 
-
 //Importar handlebars
 const { engine }  = require('express-handlebars')
-
 
 //importar el methodOvverride
 const methodOverride = require('method-override')
@@ -19,9 +17,7 @@ const methodOverride = require('method-override')
 // Inicializaciones
 require('./config/passport')
 
-
 //instanciar express
-
 const app = express()
 
 // Configuraciones
@@ -75,7 +71,6 @@ app.use(express.static(path.join(__dirname,'public')))
 module.exports = app
 
 // Configuraciones 
-
 app.set('views',path.join(__dirname, 'views'))
 app.engine('.hbs',engine({
     defaultLayout:'main',

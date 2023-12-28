@@ -1,5 +1,5 @@
 const {Router} = require('express')
-const { renderRegisterForm, registerNewUser, renderLoginForm, loginUser, logoutUser } = require('../controllers/user.controller')
+const { renderRegisterForm, registerNewUser, renderLoginForm, loginUser, logoutUser,confirmEmail} = require('../controllers/user.controller')
 const router = Router()
 const { redirectIfAuthenticated } = require('../helpers/validate-auth')
 
@@ -18,5 +18,6 @@ router.post('/user/login',loginUser)
 //ruta para cerrar sesion del usuario
 router.post('/user/logout',logoutUser)
 
+router.get('/user/confirmar/:token',confirmEmail)
 
 module.exports =router

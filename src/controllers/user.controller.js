@@ -6,6 +6,8 @@ const passport = require("passport")
 const renderRegisterForm =(req,res)=>{
     res.render('user/registerForm')
 }
+const { sendMailToUser } = require("../config/nodemailer")
+
 
 
 //capturar los datos del formulario y almacenar en BDD
@@ -19,11 +21,13 @@ const registerNewUser =async(req,res)=>{
     //validar si el usuario ya esta registrado
     const userBDD = await User.findOne({email})
     if(userBDD) return res.send("Lo sentimos, el email ya se encuentra registrado")
-
     //creamos una nueva instancia del usuario
     const newUser = await new User({name,email,password,confirmpassword})
     //Encriptar el password
     newUser.password = await newUser.encrypPassword(password)
+    const token = newUser.crearToken()
+    sendMailToUser(email,token)
+
     //guardar en la BDD
     newUser.save()
     //redireccionamiento
@@ -52,11 +56,24 @@ const logoutUser =(req,res)=>{
 }
 
 
+// Ahora se procede a trabajar en la lógica de la verificación
+//  del token, para lo cual se procede a crear un método en 
+//  la siguiente ruta:
+const confirmEmail = async(req,res)=>{
+    if(!(req.params.token)) return res.send("Lo sentimos, no se puede validar la cuenta")
+    const userBDD = await User.findOne({token:req.params.token})
+    userBDD.token=null
+    userBDD.confirmEmail=true
+    await userBDD.save()
+    res.send('Token confirmado, ya puedes iniciar sesión');
+}
+
 //exportando los metodos (controladores)
 module.exports={
     renderRegisterForm,
     registerNewUser,
     renderLoginForm,
     loginUser,
-    logoutUser
+    logoutUser,
+    confirmEmail
 }
